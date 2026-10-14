@@ -32,6 +32,8 @@ jobs:
             echo "sdk.dir=$ANDROID_HOME" > local.properties
           elif [ -n "$ANDROID_SDK_ROOT" ]; then
             echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+          elif [ -d "$HOME/Library/Android/sdk" ]; then
+            echo "sdk.dir=$HOME/Library/Android/sdk" > local.properties
           fi
           cat local.properties || true
 
@@ -51,12 +53,12 @@ jobs:
 
       - name: 6. Build file IPA với RoboVM
         run: |
-          ./gradlew :ios:createIPA -Probovm.iosSkipSigning=true --stacktrace
+          ./gradlew :ios:createIPA -Probovm.iosSkipSigning=true -Probovm.skipSigning=true --stacktrace
 
       - name: 7. Xác định vị trí file IPA
         id: find_ipa
         run: |
-          echo "Tìm file IPA trong ios/build/robovm:"
+          echo "Tìm file IPA trong ios/build:"
           find ios/build -name "*.ipa" -type f
           IPA_FILE=$(find ios/build -name "*.ipa" -type f | head -n 1)
           if [ -z "$IPA_FILE" ]; then
