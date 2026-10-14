@@ -51,11 +51,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-robovm-
 
-      - name: 6. Build file IPA với RoboVM
+      - name: 6. Biên dịch mã nguồn Java (:core:compileJava)
+        run: ./gradlew :core:compileJava --stacktrace
+
+      - name: 7. Build file IPA với RoboVM
         run: |
           ./gradlew :ios:createIPA -Probovm.iosSkipSigning=true -Probovm.skipSigning=true --stacktrace
 
-      - name: 7. Xác định vị trí file IPA
+      - name: 8. Xác định vị trí file IPA
         id: find_ipa
         run: |
           echo "Tìm file IPA trong ios/build:"
@@ -68,7 +71,7 @@ jobs:
           echo "Found IPA: $IPA_FILE"
           echo "ipa_path=$IPA_FILE" >> $GITHUB_OUTPUT
 
-      - name: 8. Upload file IPA thành Artifact để tải về
+      - name: 9. Upload file IPA thành Artifact để tải về
         uses: actions/upload-artifact@v4
         with:
           name: LangLa-iOS-IPA

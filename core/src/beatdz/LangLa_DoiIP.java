@@ -56,9 +56,9 @@ public class LangLa_DoiIP extends LangLa_fo {
         this.tbWebData.a = 120;
         this.tbWebData.a(savedWeb.trim());
 
-        // 2 nút ở cạnh đáy: Trái (Lưu), Phải (Mặc định)
-        this.b("Lưu", 1001);
-        this.c("Mặc định", 1002);
+        // 2 nút ở cạnh đáy: Trái (Lưu), Phải (Mặc định) dùng style 7 để kích hoạt a(LangLa_jz)
+        this.a(this.width / 2 - 65, this.height - 29, "Lưu", this, 1001, 7);
+        this.a(this.width / 2 + 5, this.height - 29, "Mặc định", this, 1002, 7);
     }
 
     public void a(Graphics g) {
@@ -81,6 +81,12 @@ public class LangLa_DoiIP extends LangLa_fo {
             default:
                 break;
         }
+    }
+
+    public void a(int var1, Object var2) {
+    }
+
+    public void a(int var1, Object var2, LangLa_cy var3) {
     }
 
     public void b() {
@@ -168,10 +174,10 @@ public class LangLa_DoiIP extends LangLa_fo {
             DataCenter.gI().portServer = port;
 
             Server sv = new Server();
-            sv.id = 999;
+            sv.id = (short) 999;
             sv.name = "Máy Chủ (" + ip + ")";
             sv.ip = ip;
-            sv.port = port;
+            sv.port = (short) port;
 
             DataCenter.gI().aP = sv;
             DataCenter.gI().selectServer = sv;

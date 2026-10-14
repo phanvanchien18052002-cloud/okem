@@ -1505,10 +1505,10 @@ public class DataCenter {
     public void setServer(Server ap) {
         if (ap == null) {
             ap = new Server();
-            ap.id = 1;
+            ap.id = (short) 1;
             ap.name = "Máy Chủ (14.225.204.32)";
             ap.ip = "14.225.204.32";
-            ap.port = 19129;
+            ap.port = (short) 19129;
         }
         this.aP = ap;
         if (ap.version1 >= 0) {
