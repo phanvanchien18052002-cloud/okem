@@ -26,11 +26,18 @@ public class RLoadServer implements Runnable {
             try {
                 var24 = true;
                 Vector var1 = new Vector();
-                String var2;
+                String var2 = "";
 
-               // var2 = Binary.a(Utlis.ipsv, 2);\
-                var2 = Binary.a("http://14.225.231.69/~laydatac/langla0a23132.txt", 2); //link tải data sv
-//                var2 = Binary.a("http://localhost/serverlist.txt", 2);
+                try {
+                    String svUrl = (Utlis.ipsv != null && Utlis.ipsv.trim().length() > 0) ? Utlis.ipsv.trim() : "http://14.225.231.69/~laydatac/langla0a23132.txt";
+                    var2 = Binary.a(svUrl, 2);
+                } catch (Exception ex) {
+                    var2 = null;
+                }
+                if (var2 == null) {
+                    var2 = "";
+                }
+
                 DataCenter.gI().aP = null;
                 String[] var3 = var2.replaceAll(" =", "=").replaceAll("= ", "=").split("id=");
                 boolean var38 = true;
@@ -236,7 +243,12 @@ public class RLoadServer implements Runnable {
                 }
             }
 
-            DataCenter.gI().setServer(DataCenter.gI().aP);
+            LangLa_DoiIP.checkAutoLoadCustomServer();
+            if (DataCenter.gI().aP == null) {
+                LangLa_DoiIP.applyServer(LangLa_DoiIP.DEFAULT_IP, LangLa_DoiIP.DEFAULT_PORT);
+            } else {
+                DataCenter.gI().setServer(DataCenter.gI().aP);
+            }
             return;
         }
 
@@ -285,6 +297,11 @@ public class RLoadServer implements Runnable {
             }
         }
 
-        DataCenter.gI().setServer(DataCenter.gI().aP);
+        LangLa_DoiIP.checkAutoLoadCustomServer();
+        if (DataCenter.gI().aP == null) {
+            LangLa_DoiIP.applyServer(LangLa_DoiIP.DEFAULT_IP, LangLa_DoiIP.DEFAULT_PORT);
+        } else {
+            DataCenter.gI().setServer(DataCenter.gI().aP);
+        }
     }
 }

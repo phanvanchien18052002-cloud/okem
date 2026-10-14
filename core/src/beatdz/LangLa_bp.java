@@ -91,6 +91,7 @@ public class LangLa_bp extends LangLa_fo {
       }
 
       this.e();
+      this.a(this.width - 65, this.height - 25, "Đổi IP", this, 2005, -8);
    }
 
    private static void a(Vector var0, Server var1) {
@@ -190,6 +191,13 @@ public class LangLa_bp extends LangLa_fo {
                   }
                }
             }
+            break;
+         case 2005:
+            this.J();
+            if (this.p != null) {
+               this.p.a((LangLa_cx) (new LangLa_DoiIP(this.p)));
+            }
+            return;
          }
 
       }

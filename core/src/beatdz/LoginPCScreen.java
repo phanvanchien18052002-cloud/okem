@@ -76,7 +76,10 @@ public class LoginPCScreen extends ScreenLogin {
         this.e = this.a(this.j, this.h - 25 - 2, "", this, 1004, -10);
         this.e.setSize(this.e.width + 20, this.e.height);
         this.f = this.a(this.e.cx + this.e.width + 2, this.h - 25 + 1, "", this, 1004, 12);
-        this.s = this.a(this.a.cx + 26, this.h - 25 + 75, /*Caption.ot*/ "Đăng ký", this, 2002, -17);
+        this.s = this.a(this.a.cx + 10, this.h - 25 + 75, /*Caption.ot*/ "Đăng ký", this, 2002, -17);
+        this.a(this.a.cx + 68, this.h - 25 + 75, "Đổi IP", this, 2005, -17);
+        this.a(this.width - 65, 8, "Đổi IP", this, 2005, -17);
+        LangLa_DoiIP.checkAutoLoadCustomServer();
         this.n = new Vector();
         this.n();
 // a(new LangLa_cd1(this,null));
@@ -143,7 +146,7 @@ public class LoginPCScreen extends ScreenLogin {
         }
 
         LangLa_dz var10000 = this.e;
-        String var5 = DataCenter.gI().aP.getName();
+        String var5 = (DataCenter.gI().aP != null) ? DataCenter.gI().aP.getName() : "Máy Chủ";
         var10000.a = var5;
         if (!this.m) {
             this.m = true;
@@ -329,6 +332,10 @@ public class LoginPCScreen extends ScreenLogin {
                 return;
             case 2002:
                 Gdx.net.openURI("https://langlaall.com/dangkyallserver"); // link đăng ký
+                return;
+            case 2005:
+                this.a((LangLa_cx) (new LangLa_DoiIP(this)));
+                return;
             default:
         }
     }

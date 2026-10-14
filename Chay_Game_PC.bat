@@ -15,12 +15,12 @@ echo ===================================================
 
 if defined JAVA_HOME (
     if exist "%JAVA_HOME%\bin\java.exe" (
-        "%JAVA_HOME%\bin\java.exe" -jar "%JAR_PATH%"
+        "%JAVA_HOME%\bin\java.exe" -jar "%JAR_PATH%" %*
         goto :END
     )
 )
 
-java -jar "%JAR_PATH%"
+java -jar "%JAR_PATH%" %*
 
 :END
 if %errorlevel% neq 0 (

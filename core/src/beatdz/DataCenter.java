@@ -294,6 +294,13 @@ public class DataCenter {
         this.dataTreoCho = new String[2][];
         // this.aU = "http://dl.langla.me/";
         this.aU = "http://14.225.231.69/~laydatac/"; // tải data
+        try {
+            String savedWeb = Binary.readUTF("custom_webdata");
+            if (savedWeb != null && savedWeb.trim().length() > 0) {
+                this.aU = savedWeb.trim();
+                if (!this.aU.endsWith("/")) this.aU += "/";
+            }
+        } catch (Exception ignored) {}
         this.aV = this.aU + "checkpc.txt";
         this.aW = this.aU + "checkandroid.txt";
         this.aX = this.aU + "checkios.txt";
@@ -1496,6 +1503,13 @@ public class DataCenter {
     }
 
     public void setServer(Server ap) {
+        if (ap == null) {
+            ap = new Server();
+            ap.id = 1;
+            ap.name = "Máy Chủ (14.225.204.32)";
+            ap.ip = "14.225.204.32";
+            ap.port = 19129;
+        }
         this.aP = ap;
         if (ap.version1 >= 0) {
             this.VER1 = ap.version1;
