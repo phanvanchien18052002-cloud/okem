@@ -1,0 +1,74 @@
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      skip_signing:
+        description: 'Bỏ qua ký chứng chỉ (Tạo file IPA ad-hoc để cài qua Sideloadly / AltStore / TrollStore)'
+        required: true
+        type: boolean
+        default: true
+
+jobs:
+  build-ipa:
+    name: Build iOS IPA (macOS Runner)
+    runs-on: macos-14
+
+    steps:
+      - name: 1. Checkout mã nguồn
+        uses: actions/checkout@v4
+
+      - name: 2. Cài đặt Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: 3. Setup Android SDK path (Tránh lỗi build module android)
+        run: |
+          if [ -n "$ANDROID_HOME" ]; then
+            echo "sdk.dir=$ANDROID_HOME" > local.properties
+          elif [ -n "$ANDROID_SDK_ROOT" ]; then
+            echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
+          fi
+          cat local.properties || true
+
+      - name: 4. Cấp quyền thực thi gradlew
+        run: chmod +x gradlew
+
+      - name: 5. Cache Gradle & RoboVM
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/.robovm/cache
+          key: ${{ runner.os }}-robovm-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-robovm-
+
+      - name: 6. Build file IPA với RoboVM
+        run: |
+          ./gradlew :ios:createIPA -Probovm.iosSkipSigning=true --stacktrace
+
+      - name: 7. Xác định vị trí file IPA
+        id: find_ipa
+        run: |
+          echo "Tìm file IPA trong ios/build/robovm:"
+          find ios/build -name "*.ipa" -type f
+          IPA_FILE=$(find ios/build -name "*.ipa" -type f | head -n 1)
+          if [ -z "$IPA_FILE" ]; then
+            echo "::error::Không tìm thấy file IPA sau khi build!"
+            exit 1
+          fi
+          echo "Found IPA: $IPA_FILE"
+          echo "ipa_path=$IPA_FILE" >> $GITHUB_OUTPUT
+
+      - name: 8. Upload file IPA thành Artifact để tải về
+        uses: actions/upload-artifact@v4
+        with:
+          name: LangLa-iOS-IPA
+          path: ${{ steps.find_ipa.outputs.ipa_path }}
+          retention-days: 30
