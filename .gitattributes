@@ -1,0 +1,31 @@
+# ===================================================
+# .gitattributes for Unity iOS Project
+# ===================================================
+
+# Git LFS config for files > 100MB (dùng khi sử dụng Git LFS)
+Data/resources.assets.resS filter=lfs diff=lfs merge=lfs -text
+Frameworks/UnityRuntime.framework/UnityRuntime filter=lfs diff=lfs merge=lfs -text
+*.resS filter=lfs diff=lfs merge=lfs -text
+
+# Đảm bảo file shell script trên macOS giữ nguyên định dạng xuống dòng LF
+*.sh text eol=lf
+
+# Text files
+*.m text
+*.h text
+*.mm text
+*.c text
+*.cpp text
+*.plist text
+*.storyboard text
+*.json text
+*.config text
+
+# Binary files
+*.png binary
+*.dat binary
+*.assets binary
+*.resource binary
+*.dylib binary
+*.a binary
+

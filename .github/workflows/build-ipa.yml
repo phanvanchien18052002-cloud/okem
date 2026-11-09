@@ -1,0 +1,188 @@
+name: Build iOS IPA (NSO)
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_configuration:
+        description: 'Build Configuration (Release or Debug)'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+  push:
+    branches:
+      - main
+      - master
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-ipa:
+    name: Build & Package IPA
+    runs-on: macos-14
+
+    steps:
+      - name: 📥 Checkout repository (hỗ trợ Git LFS)
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 1
+
+      - name: 📦 Pull Git LFS objects (nếu có dùng Git LFS)
+        run: |
+          git lfs pull || true
+
+      - name: 🧩 Khôi phục file lớn bị cắt nhỏ (.part) (nếu dùng script)
+        run: |
+          echo "=== KIỂM TRA FILE CẮT NHỎ ==="
+          find . -name "*.part00" | while read -r first_part; do
+            base="${first_part%.part00}"
+            echo "Đang ghép lại file: $base ..."
+            rm -f "$base"
+            ls "${base}".part* | sort | while read -r part_file; do
+              cat "$part_file" >> "$base"
+            done
+            rm -f "${base}".part*
+            echo "-> Đã ghép xong $base (Dung lượng: $(ls -lh "$base" | awk '{print $5}'))"
+          done
+
+      - name: 🛡️ KIỂM TRA HÌNH ẢNH & TÀI NGUYÊN GAME (CHỐNG LỖI MẤT HÌNH ẢNH)
+        run: |
+          echo "=========================================================="
+          echo "    BẢO VỆ TÀI NGUYÊN: KIỂM TRA ĐẦY ĐỦ HÌNH ẢNH GAME     "
+          echo "=========================================================="
+          
+          # 1. Kiểm tra Data/resources.assets.resS (Nơi lưu toàn bộ hình ảnh, texture game)
+          RESS_FILE="Data/resources.assets.resS"
+          if [ ! -f "$RESS_FILE" ]; then
+            echo "::error::[LỖI NGHIÊM TRỌNG] Thiếu file $RESS_FILE! Không thể tiếp tục vì game sẽ mất toàn bộ hình ảnh!"
+            exit 1
+          fi
+          
+          RESS_SIZE=$(wc -c < "$RESS_FILE" | tr -d ' ')
+          echo "File $RESS_FILE kích thước: $RESS_SIZE bytes"
+          if [ "$RESS_SIZE" -lt 150000000 ]; then
+            echo "::error::[LỖI] File $RESS_FILE chỉ có $RESS_SIZE bytes (< 150MB)! Đây là con trỏ Git LFS rỗng chưa tải về dữ liệu thật."
+            echo "::error::Hãy chạy script .\\split_large_files.ps1 trước khi push lên GitHub hoặc cấu hình Git LFS!"
+            exit 1
+          fi
+          echo "✅ XÁC NHẬN: Data/resources.assets.resS hợp lệ (~200MB) - Hình ảnh game đầy đủ!"
+
+          # 2. Kiểm tra Frameworks/UnityRuntime.framework/UnityRuntime
+          RUNTIME_FILE="Frameworks/UnityRuntime.framework/UnityRuntime"
+          if [ ! -f "$RUNTIME_FILE" ]; then
+            echo "::error::[LỖI NGHIÊM TRỌNG] Thiếu file $RUNTIME_FILE!"
+            exit 1
+          fi
+          
+          RUNTIME_SIZE=$(wc -c < "$RUNTIME_FILE" | tr -d ' ')
+          echo "File $RUNTIME_FILE kích thước: $RUNTIME_SIZE bytes"
+          if [ "$RUNTIME_SIZE" -lt 200000000 ]; then
+            echo "::error::[LỖI] File $RUNTIME_FILE chỉ có $RUNTIME_SIZE bytes (< 200MB)!"
+            exit 1
+          fi
+          echo "✅ XÁC NHẬN: UnityRuntime framework hợp lệ (~244MB)!"
+
+          # 3. Kiểm tra các file cơ sở trong thư mục Data
+          for required_file in "Data/resources.assets" "Data/globalgamemanagers" "Data/level0" "Data/boot.config"; do
+            if [ ! -f "$required_file" ]; then
+              echo "::error::[LỖI] Thiếu file quan trọng $required_file!"
+              exit 1
+            fi
+          done
+          echo "✅ XÁC NHẬN: Toàn bộ thư mục Data/ hợp lệ và đầy đủ!"
+
+      - name: ⚙️ Chọn phiên bản Xcode
+        run: |
+          if [ -d "/Applications/Xcode_15.4.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_15.4.app
+          elif [ -d "/Applications/Xcode_16.0.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_16.0.app
+          else
+            sudo xcode-select -s /Applications/Xcode.app
+          fi
+          xcodebuild -version
+
+      - name: 🔧 Chuẩn bị quyền thực thi & định dạng tập tin
+        run: |
+          # Sửa lỗi ký tự xuống dòng Windows CRLF cho shell script
+          sed -i '' -e 's/\r$//' process_symbols.sh || true
+          sed -i '' -e 's/\r$//' process_symbols_il2cpp.sh || true
+          chmod +x process_symbols.sh || true
+          chmod +x process_symbols_il2cpp.sh || true
+          
+          # Cấp quyền thực thi cho các binary IL2CPP của Unity
+          chmod -R +x Il2CppOutputProject/IL2CPP/build/ || true
+
+      - name: 🔨 Build Xcode Project (Không cần chứng chỉ trả phí)
+        env:
+          CONFIG: ${{ github.event.inputs.build_configuration || 'Release' }}
+        run: |
+          XCODE_DEV_DIR=$(xcode-select -p)
+          export TOOLCHAIN_DIR="$XCODE_DEV_DIR/Toolchains/XcodeDefault.xctoolchain"
+          export DT_TOOLCHAIN_DIR="$XCODE_DEV_DIR/Toolchains/XcodeDefault.xctoolchain"
+          
+          echo "Bắt đầu build với cấu hình: $CONFIG"
+          xcodebuild build \
+            -project Unity-iPhone.xcodeproj \
+            -scheme Unity-iPhone \
+            -configuration "$CONFIG" \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            COMPILER_INDEX_STORE_ENABLE=NO
+
+      - name: 📱 Đóng gói file IPA
+        run: |
+          echo "=== BẮT ĐẦU ĐÓNG GÓI IPA ==="
+          APP_PATH=$(find build/Build/Products/Release-iphoneos -maxdepth 1 -name "*.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            APP_PATH=$(find build/Build/Products -name "*.app" -type d | head -n 1)
+          fi
+          
+          if [ -z "$APP_PATH" ]; then
+            echo "::error::Không tìm thấy thư mục .app sau khi build!"
+            exit 1
+          fi
+          
+          APP_NAME=$(basename "$APP_PATH")
+          echo "Tìm thấy App Bundle: $APP_NAME tại $APP_PATH"
+          
+          # Kiểm tra thư mục Data và hình ảnh trong file .app
+          if [ ! -f "$APP_PATH/Data/resources.assets.resS" ]; then
+            echo "::error::[LỖI CỰC KỲ QUAN TRỌNG] $APP_PATH/Data/resources.assets.resS không có trong app bundle!"
+            echo "Thử copy thủ công thư mục Data vào app..."
+            cp -R Data/ "$APP_PATH/Data/"
+          else
+            echo "✅ ĐÃ XÁC NHẬN: File hình ảnh Data/resources.assets.resS đã có mặt bên trong App Bundle!"
+          fi
+          
+          # Tạo cấu trúc Payload chuẩn của iOS IPA
+          rm -rf Payload
+          mkdir -p Payload
+          cp -R "$APP_PATH" Payload/
+          
+          # Ký mã ad-hoc để hỗ trợ TrollStore, Scarlet, Sideloadly, AltStore, Esign
+          echo "Thực hiện ký Ad-Hoc cho app bundle..."
+          codesign --force --deep --sign - "Payload/$APP_NAME" || true
+          
+          IPA_FILENAME="Nso_Free_Release.ipa"
+          zip -r -q "$IPA_FILENAME" Payload
+          
+          echo "=== HOÀN TẤT ĐÓNG GÓI ==="
+          ls -lh "$IPA_FILENAME"
+          echo "IPA_FILE=$IPA_FILENAME" >> $GITHUB_ENV
+
+      - name: 🚀 Tải file IPA lên Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Nso_Free_iOS_IPA
+          path: Nso_Free_Release.ipa
+          retention-days: 14
+

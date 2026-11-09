@@ -1,0 +1,47 @@
+# ===================================================
+# .gitignore for Unity iOS Project (NSO)
+# ===================================================
+
+# OS and Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Xcode build products and user state
+build/
+DerivedData/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcuserdatad/
+*.xcuserstate
+
+# Unity IL2CPP temporary build artifacts
+Il2CppTempDirArtifacts/
+
+# ===================================================
+# QUAN TRỌNG: ĐẢM BẢO KHÔNG BỎ SÓT BẤT KỲ DỮ LIỆU GAME NÀO!
+# TUYỆT ĐỐI KHÔNG IGNORE THƯ MỤC DATA HOẶC HÌNH ẢNH GAME
+# ===================================================
+!Data/
+!Data/**
+!Frameworks/
+!Frameworks/**
+!Il2CppOutputProject/
+!Il2CppOutputProject/**
+!Classes/
+!Classes/**
+!Libraries/
+!Libraries/**
+!Unity-iPhone/
+!Unity-iPhone/**
+!UnityFramework/
+!UnityFramework/**
+
+# Split file script temporary backups (đặt sau để luôn có hiệu lực)
+*.original
+*.bak
+
+

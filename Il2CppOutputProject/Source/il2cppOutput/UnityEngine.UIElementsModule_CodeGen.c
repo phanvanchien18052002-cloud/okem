@@ -1,0 +1,131 @@
+﻿#include "pch-c.h"
+
+
+#include "codegen/il2cpp-codegen-metadata.h"
+
+
+
+
+
+extern void EmbeddedAttribute__ctor_mD39C25AACFC0ED080CB375155DEBCA852668B4DE (void);
+extern void RefSafetyRulesAttribute__ctor_m66C7929899D1160F37F80348F15DE31E9693FBF8 (void);
+extern void __UnityModuleInitialization_Initialize_m394D33CF5DD35443C81B28AE534433C9DA5691EA (void);
+extern void KeyboardEventExtensions_ShouldSendNavigationMoveEventRuntime_mE115DCF9A83C6D801DEF4DCEEF402C78A2ED31C1 (void);
+extern void PointerType__cctor_mC0CE92C3808862FCF47294B692085540D250A028 (void);
+extern void PointerId__cctor_m3BB8C9F77AFE8746AC37B7E20F963C22BAC222D6 (void);
+extern void PanelInputState_get_current_m84D168B44775977C801CB4F0E1BB876C2204B2AB (void);
+extern void PanelInputSettings_get_Default_m489504E492EDFA286F7CF0F7906702ACE3636244 (void);
+extern void PanelInputSettings_get_processWorldSpaceInput_mFF7F8E3CBB777701F57FA4C28D92729E9A224347 (void);
+extern void PanelInputSettings_get_interactionLayers_m6A82DF737D92396E81980FA1937505AC6AF0D25E (void);
+extern void PanelInputSettings_get_maxInteractionDistance_m38D4CA84FD4CDB78B6C9E6C289D375D7F96066B3 (void);
+extern void PanelInputSettings_get_defaultEventCameraIsMainCamera_mDB95183F2EB6864022D8E23BBF35C6FFB4FCFB1D (void);
+extern void PanelInputSettings_get_eventCameras_m11C55A86720D76A53F2A130092CF6D76EFC0C472 (void);
+extern void PanelInputSettings_get_autoCreatePanelComponents_m72D7325B9E57366B28617F3FC42151959EFD2EE1 (void);
+extern void PanelInputSettings_get_shouldRedirectInput_m0B63F6074A80887627F7A439548389711101CD2D (void);
+extern void PanelInputSettings__cctor_m6AA86B324B1A49D3C0C982DF552CAEA4ED3764BB (void);
+extern void IRuntimePanel_get_uIElementsRuntimeUtility_m0F84F456439695E51404993CA7BBB2D15DE83A80 (void);
+extern void IRuntimePanel_get_pointerDeviceState_m83C7289F966DEE381F99F51766CEF7010A1E9A65 (void);
+extern void UIRUtility_Destroy_m9E925E79E7B4A4853B47C1EFACEF2ED0A7844A23 (void);
+extern void UIRUtility__cctor_m467B47359B3F52D1C3261BF6741239AD0CDDD348 (void);
+extern void UnloadingUtility_set_isUnloaded_m2ECB47F522A36AB9AC6FA7EB48D3386D8401B1B3 (void);
+extern void UnloadingUtility_OnCodeLoaded_mC20B475F591361C5A1AA029E4BEFAF621D444F51 (void);
+extern void UnloadingUtility_OnCodeUnloading_mB77C30ADF2E65DDF1E8A93FFBE3D6B350A273D1C (void);
+extern void UnloadingUtility_UnityEngine_UIElements_UnloadingUtility_OnCodeLoaded_RegisterLifecycleMethod_m1F0136851208E4B52D7DF245F3FC30E3B2FDF253 (void);
+extern void UnloadingUtility_UnityEngine_UIElements_UnloadingUtility_OnCodeUnloading_RegisterLifecycleMethod_mF98AF1994C8CEC7EBEB2840B142438D24582CF3E (void);
+extern void UnloadingUtility__cctor_m882F13E680D176B59315E211A0224B33DD519DD7 (void);
+extern void Shaders__cctor_m06282ACC2F5344B37C455BC5718897333DB77E3E (void);
+static Il2CppMethodPointer s_methodPointers[77] = 
+{
+	EmbeddedAttribute__ctor_mD39C25AACFC0ED080CB375155DEBCA852668B4DE,
+	RefSafetyRulesAttribute__ctor_m66C7929899D1160F37F80348F15DE31E9693FBF8,
+	__UnityModuleInitialization_Initialize_m394D33CF5DD35443C81B28AE534433C9DA5691EA,
+	KeyboardEventExtensions_ShouldSendNavigationMoveEventRuntime_mE115DCF9A83C6D801DEF4DCEEF402C78A2ED31C1,
+	PointerType__cctor_mC0CE92C3808862FCF47294B692085540D250A028,
+	PointerId__cctor_m3BB8C9F77AFE8746AC37B7E20F963C22BAC222D6,
+	NULL,
+	PanelInputState_get_current_m84D168B44775977C801CB4F0E1BB876C2204B2AB,
+	PanelInputSettings_get_Default_m489504E492EDFA286F7CF0F7906702ACE3636244,
+	PanelInputSettings_get_processWorldSpaceInput_mFF7F8E3CBB777701F57FA4C28D92729E9A224347,
+	PanelInputSettings_get_interactionLayers_m6A82DF737D92396E81980FA1937505AC6AF0D25E,
+	PanelInputSettings_get_maxInteractionDistance_m38D4CA84FD4CDB78B6C9E6C289D375D7F96066B3,
+	PanelInputSettings_get_defaultEventCameraIsMainCamera_mDB95183F2EB6864022D8E23BBF35C6FFB4FCFB1D,
+	PanelInputSettings_get_eventCameras_m11C55A86720D76A53F2A130092CF6D76EFC0C472,
+	PanelInputSettings_get_autoCreatePanelComponents_m72D7325B9E57366B28617F3FC42151959EFD2EE1,
+	PanelInputSettings_get_shouldRedirectInput_m0B63F6074A80887627F7A439548389711101CD2D,
+	PanelInputSettings__cctor_m6AA86B324B1A49D3C0C982DF552CAEA4ED3764BB,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	IRuntimePanel_get_uIElementsRuntimeUtility_m0F84F456439695E51404993CA7BBB2D15DE83A80,
+	IRuntimePanel_get_pointerDeviceState_m83C7289F966DEE381F99F51766CEF7010A1E9A65,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	UIRUtility_Destroy_m9E925E79E7B4A4853B47C1EFACEF2ED0A7844A23,
+	UIRUtility__cctor_m467B47359B3F52D1C3261BF6741239AD0CDDD348,
+	UnloadingUtility_set_isUnloaded_m2ECB47F522A36AB9AC6FA7EB48D3386D8401B1B3,
+	UnloadingUtility_OnCodeLoaded_mC20B475F591361C5A1AA029E4BEFAF621D444F51,
+	UnloadingUtility_OnCodeUnloading_mB77C30ADF2E65DDF1E8A93FFBE3D6B350A273D1C,
+	UnloadingUtility_UnityEngine_UIElements_UnloadingUtility_OnCodeLoaded_RegisterLifecycleMethod_m1F0136851208E4B52D7DF245F3FC30E3B2FDF253,
+	UnloadingUtility_UnityEngine_UIElements_UnloadingUtility_OnCodeUnloading_RegisterLifecycleMethod_mF98AF1994C8CEC7EBEB2840B142438D24582CF3E,
+	UnloadingUtility__cctor_m882F13E680D176B59315E211A0224B33DD519DD7,
+	Shaders__cctor_m06282ACC2F5344B37C455BC5718897333DB77E3E,
+};
+IL2CPP_EXTERN_C const Il2CppCodeGenModule g_UnityEngine_UIElementsModule_CodeGenModule;
+const Il2CppCodeGenModule g_UnityEngine_UIElementsModule_CodeGenModule = 
+{
+	"UnityEngine.UIElementsModule.dll",
+	77,
+	s_methodPointers,
+	0,
+	NULL,
+	0,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+	NULL,
+};
